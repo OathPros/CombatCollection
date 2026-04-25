@@ -9,7 +9,11 @@ export default {
         panel: "#1b1715",
         accent: "#7a1c1d",
         brass: "#ad8a46",
-        parchment: "#efe4ce"
+        parchment: "#efe4ce",
+        steel: "#5f718a",
+        forest: "#49634b",
+        amethyst: "#6a4e8f",
+        ember: "#8a3a32"
       },
       fontFamily: {
         serif: ["Georgia", "serif"],
