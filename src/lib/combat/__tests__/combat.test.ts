@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { filterByWeaponAndInput } from "@/lib/combat/matching";
 import { rollDescriptions } from "@/lib/combat/filtering";
-import { shouldDisableSecondaryWeapon } from "@/lib/combat/weapon-rules";
+import {
+  ensureValidSelection,
+  getValidAttributesForWeapon,
+  getValidModesForWeapon,
+  shouldDisableSecondaryWeapon
+} from "@/lib/combat/weapon-rules";
 import { validateCombatData } from "@/lib/combat/validation";
 import { weightedSampleUnique } from "@/lib/combat/randomize";
-import type { CombatDescription, LoadedCombatData, Weapon } from "@/lib/combat/types";
+import type { CombatDescription, LoadedCombatData, TagProfile, Weapon } from "@/lib/combat/types";
 
 const weapon: Weapon = {
   name: "Dagger",
@@ -45,20 +50,52 @@ const baseDescription: CombatDescription = {
   weight: 1
 };
 
+const tagProfiles: TagProfile[] = [
+  {
+    id: "str-thrust",
+    label: "STR thrust",
+    attribute: "STR",
+    motion: "Thrust",
+    range: "Melee",
+    grip: null,
+    damageType: null,
+    description: null
+  },
+  {
+    id: "str-thrust-throw",
+    label: "STR throw",
+    attribute: "STR",
+    motion: "Thrust",
+    range: "Throw",
+    grip: null,
+    damageType: null,
+    description: null
+  },
+  {
+    id: "dex-load",
+    label: "DEX load",
+    attribute: "DEX",
+    motion: "Load",
+    range: "Ranged",
+    grip: "TwoHanded",
+    damageType: null,
+    description: null
+  },
+  {
+    id: "dex-thrust",
+    label: "DEX thrust",
+    attribute: "DEX",
+    motion: "Thrust",
+    range: "Melee",
+    grip: null,
+    damageType: null,
+    description: null
+  }
+];
+
 const data: LoadedCombatData = {
   weapons: [weapon, secondWeapon],
-  tagProfiles: [
-    {
-      id: "str-thrust",
-      label: "STR thrust",
-      attribute: "STR",
-      motion: "Thrust",
-      range: "Melee",
-      grip: null,
-      damageType: null,
-      description: null
-    }
-  ],
+  tagProfiles: [tagProfiles[0]],
   descriptions: [
     baseDescription,
     { ...baseDescription, id: "d2", title: "Specific", isWeaponSpecific: true, weaponSlugs: ["dagger"] },
@@ -89,7 +126,14 @@ describe("combat matching", () => {
 
   it("interleaves primary and secondary results", () => {
     const results = rollDescriptions(
-      { attribute: "STR", primaryWeaponSlug: "dagger", primaryMode: "melee", secondaryWeaponSlug: "spear", secondaryMode: "melee", count: 4 },
+      {
+        attribute: "STR",
+        primaryWeaponSlug: "dagger",
+        primaryMode: "melee",
+        secondaryWeaponSlug: "spear",
+        secondaryMode: "melee",
+        count: 4
+      },
       data
     );
     expect(results[0].resultSource).toBe("primary");
@@ -100,5 +144,54 @@ describe("combat matching", () => {
     const picks = weightedSampleUnique(data.descriptions, 3);
     const ids = picks.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("weapon option derivation", () => {
+  const lightCrossbow: Weapon = {
+    ...weapon,
+    name: "Light Crossbow",
+    slug: "light-crossbow",
+    canBeMelee: false,
+    canBeThrown: false,
+    canBeRanged: true,
+    twoHandedRequired: true,
+    allowedProfiles: ["dex-load"]
+  };
+
+  const battleaxe: Weapon = {
+    ...weapon,
+    name: "Battleaxe",
+    slug: "battleaxe",
+    canBeThrown: false,
+    allowedProfiles: ["str-thrust"]
+  };
+
+  const daggerFlexible: Weapon = {
+    ...weapon,
+    allowedProfiles: ["str-thrust", "str-thrust-throw", "dex-thrust"]
+  };
+
+  it("crossbow only allows DEX", () => {
+    expect(getValidAttributesForWeapon(lightCrossbow, tagProfiles)).toEqual(["DEX"]);
+  });
+
+  it("crossbow does not show twoHanded mode", () => {
+    expect(getValidModesForWeapon(lightCrossbow, tagProfiles)).toEqual(["ranged"]);
+  });
+
+  it("selecting a STR-only weapon resets DEX", () => {
+    const validAttributes = getValidAttributesForWeapon(battleaxe, tagProfiles);
+    expect(ensureValidSelection("DEX", validAttributes)).toBe("STR");
+  });
+
+  it("selecting a DEX-only weapon resets STR", () => {
+    const validAttributes = getValidAttributesForWeapon(lightCrossbow, tagProfiles);
+    expect(ensureValidSelection("STR", validAttributes)).toBe("DEX");
+  });
+
+  it("dagger-like weapon shows multiple valid choices", () => {
+    expect(getValidAttributesForWeapon(daggerFlexible, tagProfiles)).toEqual(["STR", "DEX"]);
+    expect(getValidModesForWeapon(daggerFlexible, tagProfiles)).toEqual(["melee", "thrown"]);
   });
 });
