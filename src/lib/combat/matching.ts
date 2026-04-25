@@ -9,7 +9,7 @@ function matchesModeByRange(range: TagProfile["range"] | null, mode?: RollInput[
   return true;
 }
 
-function resolveMatchingProfileIds(
+export function resolveMatchingProfileIds(
   description: CombatDescription,
   tagProfiles: TagProfile[],
   attribute: RollInput["attribute"],

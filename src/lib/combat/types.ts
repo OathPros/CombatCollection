@@ -76,6 +76,7 @@ export interface RollInput {
 export interface RollResult {
   description: CombatDescription;
   resultSource?: "primary" | "secondary";
+  matchingProfileIds?: string[];
 }
 
 export interface LoadedCombatData {
