@@ -52,7 +52,13 @@ export function rollDescriptions(input: RollInput, data: LoadedCombatData): Roll
 
   const half = Math.ceil(count / 2);
   const primary = weightedSampleUnique(primaryPool, half).map((description) => ({ description, resultSource: "primary" as const }));
-  const secondary = weightedSampleUnique(secondaryPool, half).map((description) => ({ description, resultSource: "secondary" as const }));
+  const primaryIds = new Set(primary.map((result) => result.description.id));
+  const distinctSecondaryPool = secondaryPool.filter((description) => !primaryIds.has(description.id));
+  const secondarySamplePool = distinctSecondaryPool.length > 0 ? distinctSecondaryPool : secondaryPool;
+  const secondary = weightedSampleUnique(secondarySamplePool, half).map((description) => ({
+    description,
+    resultSource: "secondary" as const
+  }));
 
   const combined = interleave(primary, secondary);
   const deduped: RollResult[] = [];
