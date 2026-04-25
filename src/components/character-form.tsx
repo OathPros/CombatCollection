@@ -1,13 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AttackAttributeSelector } from "@/components/attack-attribute-selector";
 import { WeaponSelect } from "@/components/weapon-select";
 import { WeaponModeSelector } from "@/components/weapon-mode-selector";
 import { RollButton } from "@/components/roll-button";
 import { DescriptionResults } from "@/components/description-results";
 import { EmptyState } from "@/components/empty-state";
-import { shouldDisableSecondaryWeapon } from "@/lib/combat/weapon-rules";
+import {
+  ensureValidSelection,
+  getValidAttributesForWeapon,
+  getValidModesForWeapon,
+  getWeaponBySlug,
+  getWeaponsForAttribute,
+  shouldDisableSecondaryWeapon
+} from "@/lib/combat/weapon-rules";
 import { rollDescriptions } from "@/lib/combat/filtering";
 import type { LoadedCombatData, RollResult, WeaponMode } from "@/lib/combat/types";
 
@@ -22,23 +29,76 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
   const [results, setResults] = useState<RollResult[]>([]);
   const [hasRolled, setHasRolled] = useState(false);
 
-  const primaryWeapon = useMemo(
-    () => data.weapons.find((w) => w.slug === primaryWeaponSlug),
-    [data.weapons, primaryWeaponSlug]
+  const primaryWeapon = useMemo(() => getWeaponBySlug(data, primaryWeaponSlug), [data, primaryWeaponSlug]);
+  const secondaryWeapon = useMemo(() => getWeaponBySlug(data, secondaryWeaponSlug), [data, secondaryWeaponSlug]);
+
+  const filteredWeapons = useMemo(
+    () => getWeaponsForAttribute(data.weapons, data.tagProfiles, attribute),
+    [attribute, data.tagProfiles, data.weapons]
   );
+
+  const validAttributes = useMemo(
+    () => getValidAttributesForWeapon(primaryWeapon, data.tagProfiles),
+    [data.tagProfiles, primaryWeapon]
+  );
+  const primaryValidModes = useMemo(() => getValidModesForWeapon(primaryWeapon, data.tagProfiles), [data.tagProfiles, primaryWeapon]);
+  const secondaryValidModes = useMemo(
+    () => getValidModesForWeapon(secondaryWeapon, data.tagProfiles),
+    [data.tagProfiles, secondaryWeapon]
+  );
+
+  useEffect(() => {
+    const nextAttribute = ensureValidSelection(attribute, validAttributes);
+    if (nextAttribute !== attribute) {
+      setAttribute(nextAttribute);
+    }
+  }, [attribute, validAttributes]);
+
+  useEffect(() => {
+    const nextPrimaryMode = ensureValidSelection(primaryMode, primaryValidModes);
+    if (nextPrimaryMode !== primaryMode) {
+      setPrimaryMode(nextPrimaryMode);
+    }
+  }, [primaryMode, primaryValidModes]);
+
+  useEffect(() => {
+    const nextSecondaryMode = ensureValidSelection(secondaryMode, secondaryValidModes);
+    if (nextSecondaryMode !== secondaryMode) {
+      setSecondaryMode(nextSecondaryMode);
+    }
+  }, [secondaryMode, secondaryValidModes]);
+
+
+  useEffect(() => {
+    if (primaryWeaponSlug && !filteredWeapons.some((weapon) => weapon.slug === primaryWeaponSlug)) {
+      setPrimaryWeaponSlug(undefined);
+    }
+
+    if (secondaryWeaponSlug && !filteredWeapons.some((weapon) => weapon.slug === secondaryWeaponSlug)) {
+      setSecondaryWeaponSlug(undefined);
+    }
+  }, [filteredWeapons, primaryWeaponSlug, secondaryWeaponSlug]);
 
   const disableSecondary = shouldDisableSecondaryWeapon(primaryWeapon, useTwoHands);
 
   const onRoll = () => {
+    const safeAttribute = ensureValidSelection(attribute, validAttributes);
+    const safePrimaryMode = ensureValidSelection(primaryMode, primaryValidModes);
+    const safeSecondaryMode = ensureValidSelection(secondaryMode, secondaryValidModes);
+
+    setAttribute(safeAttribute);
+    setPrimaryMode(safePrimaryMode);
+    setSecondaryMode(safeSecondaryMode);
     setHasRolled(true);
+
     setResults(
       rollDescriptions(
         {
-          attribute,
+          attribute: safeAttribute,
           primaryWeaponSlug,
-          primaryMode,
+          primaryMode: safePrimaryMode,
           secondaryWeaponSlug: disableSecondary ? undefined : secondaryWeaponSlug,
-          secondaryMode: disableSecondary ? undefined : secondaryMode
+          secondaryMode: disableSecondary ? undefined : safeSecondaryMode
         },
         data
       )
@@ -66,10 +126,10 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
         />
       </label>
 
-      <AttackAttributeSelector value={attribute} onChange={setAttribute} />
+      <AttackAttributeSelector value={attribute} validAttributes={validAttributes} onChange={setAttribute} />
 
-      <WeaponSelect id="primaryWeapon" label="Primary weapon" weapons={data.weapons} value={primaryWeaponSlug} onChange={setPrimaryWeaponSlug} />
-      <WeaponModeSelector weapon={primaryWeapon} value={primaryMode} onChange={setPrimaryMode} />
+      <WeaponSelect id="primaryWeapon" label="Primary weapon" weapons={filteredWeapons} value={primaryWeaponSlug} onChange={setPrimaryWeaponSlug} />
+      <WeaponModeSelector value={primaryMode} validModes={primaryValidModes} onChange={setPrimaryMode} />
 
       {primaryWeapon?.versatileTwoHandedOptional ? (
         <label className="inline-flex items-center gap-2 text-sm">
@@ -81,18 +141,12 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
       <WeaponSelect
         id="secondaryWeapon"
         label="Secondary weapon (optional)"
-        weapons={data.weapons}
+        weapons={filteredWeapons}
         value={secondaryWeaponSlug}
         onChange={setSecondaryWeaponSlug}
         disabled={disableSecondary}
       />
-      {!disableSecondary ? (
-        <WeaponModeSelector
-          weapon={data.weapons.find((w) => w.slug === secondaryWeaponSlug)}
-          value={secondaryMode}
-          onChange={setSecondaryMode}
-        />
-      ) : null}
+      {!disableSecondary ? <WeaponModeSelector value={secondaryMode} validModes={secondaryValidModes} onChange={setSecondaryMode} /> : null}
 
       <div className="flex gap-2">
         <RollButton onClick={onRoll} />
