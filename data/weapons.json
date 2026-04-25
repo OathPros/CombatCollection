@@ -64,9 +64,13 @@
     "versatileTwoHandedOptional": false,
     "allowedProfiles": [
       "str-thrust",
+      "str-swing",
       "str-thrust-throw",
+      "str-swing-throw",
       "dex-thrust",
-      "dex-thrust-throw"
+      "dex-swing",
+      "dex-thrust-throw",
+      "dex-swing-throw"
     ],
     "unavailableProfiles": []
   },

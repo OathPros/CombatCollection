@@ -32,6 +32,7 @@ export function rollDescriptions(input: RollInput, data: LoadedCombatData): Roll
 
   const primaryPool = filterByWeaponAndInput(
     data.descriptions,
+    data.tagProfiles,
     primaryWeapon,
     input.attribute,
     input.primaryMode,
@@ -44,6 +45,7 @@ export function rollDescriptions(input: RollInput, data: LoadedCombatData): Roll
 
   const secondaryPool = filterByWeaponAndInput(
     data.descriptions,
+    data.tagProfiles,
     secondaryWeapon,
     input.attribute,
     input.secondaryMode,
