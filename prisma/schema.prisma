@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Weapon {
+  id                         String   @id @default(cuid())
+  name                       String
+  slug                       String   @unique
+  category                   String
+  damageTypes                String[]
+  canBeMelee                 Boolean
+  canBeThrown                Boolean
+  canBeRanged                Boolean
+  twoHandedRequired          Boolean
+  versatileTwoHandedOptional Boolean
+  allowedProfiles            String[]
+}
+
+model TagProfile {
+  id          String  @id
+  label       String
+  attribute   String
+  motion      String
+  range       String?
+  grip        String?
+  damageType  String?
+  description String?
+}
+
+model CombatDescription {
+  id               String   @id
+  title            String
+  body             String
+  bodyHtml         String?
+  author           String
+  sourceFile       String?
+  sourceSheet      String?
+  sourceRow        Int?
+  sourceElements   String?
+  profileIds       String[]
+  attribute        String
+  motion           String
+  range            String?
+  grip             String?
+  damageTypes      String[]
+  weaponSlugs      String[]
+  isWeaponSpecific Boolean
+  tags             String[]
+  sourceTags       String[]
+  status           String
+  weight           Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Character {
+  id                  String   @id @default(cuid())
+  userId              String?
+  name                String
+  attackAttribute     String?
+  primaryWeaponSlug   String?
+  primaryMode         String?
+  secondaryWeaponSlug String?
+  secondaryMode       String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
