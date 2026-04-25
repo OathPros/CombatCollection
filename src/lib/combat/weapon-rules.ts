@@ -26,6 +26,12 @@ export function getValidAttributesForWeapon(weapon: Weapon | undefined, tagProfi
   );
 }
 
+export function getWeaponsForAttribute(weapons: Weapon[], tagProfiles: TagProfile[], attribute?: Attribute): Weapon[] {
+  if (!attribute) return weapons;
+
+  return weapons.filter((weapon) => getValidAttributesForWeapon(weapon, tagProfiles).includes(attribute));
+}
+
 export function getValidModesForWeapon(weapon: Weapon | undefined, tagProfiles: TagProfile[]): WeaponMode[] {
   const profiles = getProfilesForWeapon(weapon, tagProfiles);
   if (profiles.length === 0) {

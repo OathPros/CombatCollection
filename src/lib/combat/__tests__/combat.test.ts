@@ -5,6 +5,7 @@ import {
   ensureValidSelection,
   getValidAttributesForWeapon,
   getValidModesForWeapon,
+  getWeaponsForAttribute,
   shouldDisableSecondaryWeapon
 } from "@/lib/combat/weapon-rules";
 import { validateCombatData } from "@/lib/combat/validation";
@@ -193,5 +194,15 @@ describe("weapon option derivation", () => {
   it("dagger-like weapon shows multiple valid choices", () => {
     expect(getValidAttributesForWeapon(daggerFlexible, tagProfiles)).toEqual(["STR", "DEX"]);
     expect(getValidModesForWeapon(daggerFlexible, tagProfiles)).toEqual(["melee", "thrown"]);
+  });
+
+  it("filters weapon options to STR-classified weapons", () => {
+    const filtered = getWeaponsForAttribute([lightCrossbow, battleaxe, daggerFlexible], tagProfiles, "STR");
+    expect(filtered.map((weapon) => weapon.slug)).toEqual(["battleaxe", "dagger"]);
+  });
+
+  it("filters weapon options to DEX-classified weapons", () => {
+    const filtered = getWeaponsForAttribute([lightCrossbow, battleaxe, daggerFlexible], tagProfiles, "DEX");
+    expect(filtered.map((weapon) => weapon.slug)).toEqual(["light-crossbow", "dagger"]);
   });
 });

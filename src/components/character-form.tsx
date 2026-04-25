@@ -12,6 +12,7 @@ import {
   getValidAttributesForWeapon,
   getValidModesForWeapon,
   getWeaponBySlug,
+  getWeaponsForAttribute,
   shouldDisableSecondaryWeapon
 } from "@/lib/combat/weapon-rules";
 import { rollDescriptions } from "@/lib/combat/filtering";
@@ -30,6 +31,11 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
 
   const primaryWeapon = useMemo(() => getWeaponBySlug(data, primaryWeaponSlug), [data, primaryWeaponSlug]);
   const secondaryWeapon = useMemo(() => getWeaponBySlug(data, secondaryWeaponSlug), [data, secondaryWeaponSlug]);
+
+  const filteredWeapons = useMemo(
+    () => getWeaponsForAttribute(data.weapons, data.tagProfiles, attribute),
+    [attribute, data.tagProfiles, data.weapons]
+  );
 
   const validAttributes = useMemo(
     () => getValidAttributesForWeapon(primaryWeapon, data.tagProfiles),
@@ -61,6 +67,17 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
       setSecondaryMode(nextSecondaryMode);
     }
   }, [secondaryMode, secondaryValidModes]);
+
+
+  useEffect(() => {
+    if (primaryWeaponSlug && !filteredWeapons.some((weapon) => weapon.slug === primaryWeaponSlug)) {
+      setPrimaryWeaponSlug(undefined);
+    }
+
+    if (secondaryWeaponSlug && !filteredWeapons.some((weapon) => weapon.slug === secondaryWeaponSlug)) {
+      setSecondaryWeaponSlug(undefined);
+    }
+  }, [filteredWeapons, primaryWeaponSlug, secondaryWeaponSlug]);
 
   const disableSecondary = shouldDisableSecondaryWeapon(primaryWeapon, useTwoHands);
 
@@ -111,7 +128,7 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
 
       <AttackAttributeSelector value={attribute} validAttributes={validAttributes} onChange={setAttribute} />
 
-      <WeaponSelect id="primaryWeapon" label="Primary weapon" weapons={data.weapons} value={primaryWeaponSlug} onChange={setPrimaryWeaponSlug} />
+      <WeaponSelect id="primaryWeapon" label="Primary weapon" weapons={filteredWeapons} value={primaryWeaponSlug} onChange={setPrimaryWeaponSlug} />
       <WeaponModeSelector value={primaryMode} validModes={primaryValidModes} onChange={setPrimaryMode} />
 
       {primaryWeapon?.versatileTwoHandedOptional ? (
@@ -124,7 +141,7 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
       <WeaponSelect
         id="secondaryWeapon"
         label="Secondary weapon (optional)"
-        weapons={data.weapons}
+        weapons={filteredWeapons}
         value={secondaryWeaponSlug}
         onChange={setSecondaryWeaponSlug}
         disabled={disableSecondary}
