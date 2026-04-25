@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { prisma } from "@/lib/prisma";
 import { formatZodError, validateCombatData } from "@/lib/combat/validation";
 import { ZodError } from "zod";
 import type { LoadedCombatData } from "@/lib/combat/types";
@@ -29,18 +28,27 @@ export async function loadCombatDataFromJson(): Promise<LoadedCombatData> {
 }
 
 export async function loadCombatData(): Promise<LoadedCombatData> {
-  const [dbWeapons, dbProfiles, dbDescriptions] = await Promise.all([
-    prisma.weapon.findMany(),
-    prisma.tagProfile.findMany(),
-    prisma.combatDescription.findMany()
-  ]);
+  if (!process.env.DATABASE_URL) {
+    return loadCombatDataFromJson();
+  }
 
-  if (dbWeapons.length || dbProfiles.length || dbDescriptions.length) {
-    return validateCombatData({
-      weapons: dbWeapons,
-      tagProfiles: dbProfiles,
-      descriptions: dbDescriptions
-    });
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const [dbWeapons, dbProfiles, dbDescriptions] = await Promise.all([
+      prisma.weapon.findMany(),
+      prisma.tagProfile.findMany(),
+      prisma.combatDescription.findMany()
+    ]);
+
+    if (dbWeapons.length || dbProfiles.length || dbDescriptions.length) {
+      return validateCombatData({
+        weapons: dbWeapons,
+        tagProfiles: dbProfiles,
+        descriptions: dbDescriptions
+      });
+    }
+  } catch (error) {
+    console.warn("Failed to load combat data from database; falling back to local JSON.", error);
   }
 
   return loadCombatDataFromJson();
