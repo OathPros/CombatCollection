@@ -63,6 +63,16 @@ const tagProfiles: TagProfile[] = [
     description: null
   },
   {
+    id: "str-swing",
+    label: "STR swing",
+    attribute: "STR",
+    motion: "Swing",
+    range: "Melee",
+    grip: null,
+    damageType: null,
+    description: null
+  },
+  {
     id: "str-thrust-throw",
     label: "STR throw",
     attribute: "STR",
@@ -156,6 +166,38 @@ describe("combat matching", () => {
     );
     expect(results[0].resultSource).toBe("primary");
     expect(results[1].resultSource).toBe("secondary");
+  });
+
+  it("captures matching profile ids for roll results", () => {
+    const pike: Weapon = {
+      ...weapon,
+      name: "Pike",
+      slug: "pike",
+      allowedProfiles: ["str-thrust"]
+    };
+    const dualMotionDescription: CombatDescription = {
+      ...baseDescription,
+      id: "d4",
+      profileIds: ["str-swing", "str-thrust"],
+      motion: "Swing"
+    };
+
+    const results = rollDescriptions(
+      {
+        attribute: "STR",
+        primaryWeaponSlug: "pike",
+        primaryMode: "melee",
+        count: 4
+      },
+      {
+        ...data,
+        weapons: [pike],
+        descriptions: [dualMotionDescription]
+      }
+    );
+
+    expect(results).toHaveLength(1);
+    expect(results[0].matchingProfileIds).toEqual(["str-thrust"]);
   });
 
   it("weighted random avoids duplicates", () => {

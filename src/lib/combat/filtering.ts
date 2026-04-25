@@ -1,5 +1,5 @@
 import { weightedSampleUnique } from "@/lib/combat/randomize";
-import { filterByWeaponAndInput } from "@/lib/combat/matching";
+import { filterByWeaponAndInput, resolveMatchingProfileIds } from "@/lib/combat/matching";
 import type { LoadedCombatData, RollInput, RollResult } from "@/lib/combat/types";
 
 const DEFAULT_COUNT = 6;
@@ -39,8 +39,19 @@ export function rollDescriptions(input: RollInput, data: LoadedCombatData): Roll
     input.primaryWeaponSlug
   );
 
+  const annotateResult = (result: RollResult): RollResult => {
+    const mode = result.resultSource === "secondary" ? input.secondaryMode : input.primaryMode;
+    const weapon = result.resultSource === "secondary" ? secondaryWeapon : primaryWeapon;
+    const matchingProfileIds = resolveMatchingProfileIds(result.description, data.tagProfiles, input.attribute, mode).filter(
+      (profileId) => !weapon || weapon.allowedProfiles.includes(profileId)
+    );
+    return { ...result, matchingProfileIds };
+  };
+
   if (!secondaryWeapon || !input.secondaryWeaponSlug) {
-    return weightedSampleUnique(primaryPool, count).map((description) => ({ description, resultSource: "primary" }));
+    return weightedSampleUnique(primaryPool, count)
+      .map((description) => ({ description, resultSource: "primary" as const }))
+      .map(annotateResult);
   }
 
   const secondaryPool = filterByWeaponAndInput(
@@ -73,5 +84,5 @@ export function rollDescriptions(input: RollInput, data: LoadedCombatData): Roll
     if (deduped.length >= count) break;
   }
 
-  return deduped;
+  return deduped.map(annotateResult);
 }
