@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { RollResult } from "@/lib/combat/types";
-import { getCombatIcon } from "@/lib/combat/icons";
+import { getCombatIcon, getCombatIconFallbackSrc } from "@/lib/combat/icons";
 
 function MetaChip({ label, value }: { label: string; value: string }) {
   return (
@@ -15,6 +15,7 @@ function MetaChip({ label, value }: { label: string; value: string }) {
 export function DescriptionCard({ result }: { result: RollResult }) {
   const { description, resultSource } = result;
   const icon = getCombatIcon(description);
+  const fallbackIconSrc = getCombatIconFallbackSrc();
   const [iconSrc, setIconSrc] = useState(icon.src);
   const [watermarkSrc, setWatermarkSrc] = useState(icon.src);
 
@@ -27,7 +28,7 @@ export function DescriptionCard({ result }: { result: RollResult }) {
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute -right-2 -top-2 h-36 w-36 select-none object-contain opacity-[0.06]"
-        onError={() => setWatermarkSrc("/icons/combat/default.png")}
+        onError={() => setWatermarkSrc(fallbackIconSrc)}
       />
 
       <header className="relative z-10 flex items-start justify-between gap-3">
@@ -37,7 +38,7 @@ export function DescriptionCard({ result }: { result: RollResult }) {
               src={iconSrc}
               alt={`${icon.label} icon`}
               className="h-8 w-8 object-contain"
-              onError={() => setIconSrc("/icons/combat/default.png")}
+              onError={() => setIconSrc(fallbackIconSrc)}
             />
           </div>
           <div>

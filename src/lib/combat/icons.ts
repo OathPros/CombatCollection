@@ -21,7 +21,7 @@ export interface CombatIconMeta {
   label: string;
 }
 
-export const combatIconMap: Record<CombatIconKey, CombatIconMeta> = {
+export const combatIconMap: Record<Exclude<CombatIconKey, "default">, CombatIconMeta> = {
   "str-swing": { key: "str-swing", src: "/icons/combat/str-swing.png", label: "Strength Swing" },
   "str-thrust": { key: "str-thrust", src: "/icons/combat/str-thrust.png", label: "Strength Thrust" },
   "str-strike": { key: "str-strike", src: "/icons/combat/str-strike.png", label: "Strength Strike" },
@@ -41,18 +41,34 @@ export const combatIconMap: Record<CombatIconKey, CombatIconMeta> = {
     key: "dex-thrust-throw",
     src: "/icons/combat/dex-thrust-throw.png",
     label: "Dexterity Thrust Throw"
-  },
-  default: { key: "default", src: "/icons/combat/default.png", label: "Combat Action" }
+  }
 };
 
 type IconDescription = Pick<CombatDescription, "profileIds" | "attribute" | "motion" | "range">;
 
-function isCombatIconKey(value: string): value is CombatIconKey {
+const FALLBACK_ICON_KEY: Exclude<CombatIconKey, "default"> = "str-swing";
+
+const profileIconMap: Record<string, Exclude<CombatIconKey, "default">> = {
+  "dex-draw": "dex-draw",
+  "dex-load": "dex-load",
+  "dex-strike": "dex-strike",
+  "dex-swing": "dex-swing",
+  "dex-swing-throw": "dex-swing-throw",
+  "dex-thrust": "dex-thrust",
+  "dex-thrust-throw": "dex-thrust-throw",
+  "str-strike": "str-strike",
+  "str-swing": "str-swing",
+  "str-swing-throw": "str-swing-throw",
+  "str-thrust": "str-thrust",
+  "str-thrust-throw": "str-thrust-throw"
+};
+
+function isCombatIconKey(value: string): value is Exclude<CombatIconKey, "default"> {
   return value in combatIconMap;
 }
 
 export function getCombatIconKey(description: IconDescription): CombatIconKey {
-  const profileKey = description.profileIds.find((profileId) => isCombatIconKey(profileId));
+  const profileKey = description.profileIds.map((profileId) => profileIconMap[profileId]).find(Boolean);
 
   if (profileKey) {
     return profileKey;
@@ -67,5 +83,19 @@ export function getCombatIconKey(description: IconDescription): CombatIconKey {
 }
 
 export function getCombatIcon(description: IconDescription): CombatIconMeta {
-  return combatIconMap[getCombatIconKey(description)] ?? combatIconMap.default;
+  const iconKey = getCombatIconKey(description);
+
+  if (iconKey !== "default") {
+    return combatIconMap[iconKey];
+  }
+
+  return {
+    key: "default",
+    src: combatIconMap[FALLBACK_ICON_KEY].src,
+    label: "Combat Action"
+  };
+}
+
+export function getCombatIconFallbackSrc(): string {
+  return combatIconMap[FALLBACK_ICON_KEY].src;
 }
