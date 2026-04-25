@@ -1,1 +1,174 @@
-[]
+[
+  {
+    "id": "dex-draw",
+    "label": "DEX, Draw",
+    "attribute": "DEX",
+    "motion": "Draw",
+    "range": "Ranged",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Draw profile. A bow attack built around drawing, aiming, tension, and release. Range classification: Ranged.",
+    "sourceLabels": [
+      "DEX; Draw",
+      "DEX; Range; Draw"
+    ],
+    "sourceCount": 48
+  },
+  {
+    "id": "dex-load",
+    "label": "DEX, Load",
+    "attribute": "DEX",
+    "motion": "Load",
+    "range": "Ranged",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Load profile. A crossbow attack built around loading, aiming, trigger pressure, and release. Range classification: Ranged.",
+    "sourceLabels": [
+      "DEX; Load",
+      "DEX; Range; Load"
+    ],
+    "sourceCount": 50
+  },
+  {
+    "id": "dex-strike",
+    "label": "DEX, Strike",
+    "attribute": "DEX",
+    "motion": "Strike",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Strike profile. An unarmed attack built around fists, feet, knees, elbows, or body movement. Range classification: Melee.",
+    "sourceLabels": [
+      "DEX; Strike"
+    ],
+    "sourceCount": 33
+  },
+  {
+    "id": "dex-swing",
+    "label": "DEX, Swing",
+    "attribute": "DEX",
+    "motion": "Swing",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Swing profile. A lateral or arcing attack built around a weapon's sweeping path. Range classification: Melee.",
+    "sourceLabels": [
+      "DEX; Swing"
+    ],
+    "sourceCount": 29
+  },
+  {
+    "id": "dex-swing-throw",
+    "label": "DEX, Swing, Throw",
+    "attribute": "DEX",
+    "motion": "Swing",
+    "range": "Throw",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Swing profile. A lateral or arcing attack built around a weapon's sweeping path. Range classification: Throw.",
+    "sourceLabels": [
+      "DEX; Swing; Throw"
+    ],
+    "sourceCount": 20
+  },
+  {
+    "id": "dex-thrust",
+    "label": "DEX, Thrust",
+    "attribute": "DEX",
+    "motion": "Thrust",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Thrust profile. A forward-driving attack built around a point, jab, lunge, or piercing line. Range classification: Melee.",
+    "sourceLabels": [
+      "DEX; Thrust",
+      "Dex; Thrust"
+    ],
+    "sourceCount": 37
+  },
+  {
+    "id": "dex-thrust-throw",
+    "label": "DEX, Thrust, Throw",
+    "attribute": "DEX",
+    "motion": "Thrust",
+    "range": "Throw",
+    "grip": null,
+    "damageType": null,
+    "description": "DEX Thrust profile. A forward-driving attack built around a point, jab, lunge, or piercing line. Range classification: Throw.",
+    "sourceLabels": [
+      "DEX; Thrust; Throw"
+    ],
+    "sourceCount": 2
+  },
+  {
+    "id": "str-strike",
+    "label": "STR, Strike",
+    "attribute": "STR",
+    "motion": "Strike",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "STR Strike profile. An unarmed attack built around fists, feet, knees, elbows, or body movement. Range classification: Melee.",
+    "sourceLabels": [
+      "STR; Strike"
+    ],
+    "sourceCount": 23
+  },
+  {
+    "id": "str-swing",
+    "label": "STR, Swing",
+    "attribute": "STR",
+    "motion": "Swing",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "STR Swing profile. A lateral or arcing attack built around a weapon's sweeping path. Range classification: Melee.",
+    "sourceLabels": [
+      "STR; Swing"
+    ],
+    "sourceCount": 77
+  },
+  {
+    "id": "str-swing-throw",
+    "label": "STR, Swing, Throw",
+    "attribute": "STR",
+    "motion": "Swing",
+    "range": "Throw",
+    "grip": null,
+    "damageType": null,
+    "description": "STR Swing profile. A lateral or arcing attack built around a weapon's sweeping path. Range classification: Throw.",
+    "sourceLabels": [
+      "STR; Swing; Throw"
+    ],
+    "sourceCount": 29
+  },
+  {
+    "id": "str-thrust",
+    "label": "STR, Thrust",
+    "attribute": "STR",
+    "motion": "Thrust",
+    "range": "Melee",
+    "grip": null,
+    "damageType": null,
+    "description": "STR Thrust profile. A forward-driving attack built around a point, jab, lunge, or piercing line. Range classification: Melee.",
+    "sourceLabels": [
+      "STR; Thrust",
+      "Str; Thrust"
+    ],
+    "sourceCount": 39
+  },
+  {
+    "id": "str-thrust-throw",
+    "label": "STR, Thrust, Throw",
+    "attribute": "STR",
+    "motion": "Thrust",
+    "range": "Throw",
+    "grip": null,
+    "damageType": null,
+    "description": "STR Thrust profile. A forward-driving attack built around a point, jab, lunge, or piercing line. Range classification: Throw.",
+    "sourceLabels": [
+      "STR; Thrust; Throw"
+    ],
+    "sourceCount": 40
+  }
+]

@@ -1,1 +1,574 @@
-[]
+[
+  {
+    "name": "Crossbow, Light",
+    "slug": "crossbow-light",
+    "category": "simple-ranged",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": false,
+    "canBeThrown": false,
+    "canBeRanged": true,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-load"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Crossbow, Heavy",
+    "slug": "crossbow-heavy",
+    "category": "martial-ranged",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": false,
+    "canBeThrown": false,
+    "canBeRanged": true,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-load"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Crossbow, Hand",
+    "slug": "crossbow-hand",
+    "category": "martial-ranged",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": false,
+    "canBeThrown": false,
+    "canBeRanged": true,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-load"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Dagger",
+    "slug": "dagger",
+    "category": "simple-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust",
+      "str-thrust-throw",
+      "dex-thrust",
+      "dex-thrust-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Rapier",
+    "slug": "rapier",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Longbow",
+    "slug": "longbow",
+    "category": "martial-ranged",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": false,
+    "canBeThrown": false,
+    "canBeRanged": true,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-draw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Shortbow",
+    "slug": "shortbow",
+    "category": "simple-ranged",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": false,
+    "canBeThrown": false,
+    "canBeRanged": true,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "dex-draw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Shortsword",
+    "slug": "shortsword",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust",
+      "dex-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Scimitar",
+    "slug": "scimitar",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing",
+      "dex-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Club",
+    "slug": "club",
+    "category": "simple-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Greatclub",
+    "slug": "greatclub",
+    "category": "simple-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Handaxe",
+    "slug": "handaxe",
+    "category": "simple-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing",
+      "str-swing-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Javelin",
+    "slug": "javelin",
+    "category": "simple-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust",
+      "str-thrust-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Light Hammer",
+    "slug": "light-hammer",
+    "category": "simple-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing",
+      "str-swing-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Mace",
+    "slug": "mace",
+    "category": "simple-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Quarterstaff",
+    "slug": "quarterstaff",
+    "category": "simple-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Sickle",
+    "slug": "sickle",
+    "category": "simple-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Spear",
+    "slug": "spear",
+    "category": "simple-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-thrust",
+      "str-thrust-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Battleaxe",
+    "slug": "battleaxe",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Flail",
+    "slug": "flail",
+    "category": "martial-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Glaive",
+    "slug": "glaive",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Greataxe",
+    "slug": "greataxe",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Greatsword",
+    "slug": "greatsword",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Halberd",
+    "slug": "halberd",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Lance",
+    "slug": "lance",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Longsword",
+    "slug": "longsword",
+    "category": "martial-melee",
+    "damageTypes": [
+      "slashing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Maul",
+    "slug": "maul",
+    "category": "martial-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Morningstar",
+    "slug": "morningstar",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Pike",
+    "slug": "pike",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": true,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Trident",
+    "slug": "trident",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": true,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-thrust",
+      "str-thrust-throw"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "War Pick",
+    "slug": "war-pick",
+    "category": "martial-melee",
+    "damageTypes": [
+      "piercing"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-thrust"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Warhammer",
+    "slug": "warhammer",
+    "category": "martial-melee",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": true,
+    "allowedProfiles": [
+      "str-swing"
+    ],
+    "unavailableProfiles": []
+  },
+  {
+    "name": "Unarmed",
+    "slug": "unarmed",
+    "category": "unarmed",
+    "damageTypes": [
+      "bludgeoning"
+    ],
+    "canBeMelee": true,
+    "canBeThrown": false,
+    "canBeRanged": false,
+    "twoHandedRequired": false,
+    "versatileTwoHandedOptional": false,
+    "allowedProfiles": [
+      "str-strike",
+      "dex-strike"
+    ],
+    "unavailableProfiles": []
+  }
+]
