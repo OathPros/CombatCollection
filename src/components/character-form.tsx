@@ -15,10 +15,20 @@ import {
   getWeaponsForAttribute,
   shouldDisableSecondaryWeapon
 } from "@/lib/combat/weapon-rules";
-import { rollDescriptions } from "@/lib/combat/filtering";
-import type { LoadedCombatData, RollResult, WeaponMode } from "@/lib/combat/types";
+import { listAllMatchingDescriptions, rollDescriptions } from "@/lib/combat/filtering";
+import type { Character, LoadedCombatData, RollResult, WeaponMode } from "@/lib/combat/types";
+import { saveCharacter } from "@/server/actions/save-character";
 
-export function CharacterForm({ data }: { data: LoadedCombatData }) {
+export function CharacterForm({
+  data,
+  initialCharacter,
+  onSaveCharacter
+}: {
+  data: LoadedCombatData;
+  initialCharacter?: Character;
+  onSaveCharacter?: (character: Character) => void;
+}) {
+  const [id, setId] = useState<string | undefined>();
   const [name, setName] = useState("");
   const [attribute, setAttribute] = useState<"STR" | "DEX" | undefined>();
   const [primaryWeaponSlug, setPrimaryWeaponSlug] = useState<string>();
@@ -27,7 +37,9 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
   const [secondaryMode, setSecondaryMode] = useState<WeaponMode>();
   const [useTwoHands, setUseTwoHands] = useState(false);
   const [results, setResults] = useState<RollResult[]>([]);
+  const [allResults, setAllResults] = useState<RollResult[]>([]);
   const [hasRolled, setHasRolled] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const primaryWeapon = useMemo(() => getWeaponBySlug(data, primaryWeaponSlug), [data, primaryWeaponSlug]);
   const secondaryWeapon = useMemo(() => getWeaponBySlug(data, secondaryWeaponSlug), [data, secondaryWeaponSlug]);
@@ -46,6 +58,20 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
     () => getValidModesForWeapon(secondaryWeapon, data.tagProfiles),
     [data.tagProfiles, secondaryWeapon]
   );
+
+  useEffect(() => {
+    if (!initialCharacter) return;
+    setId(initialCharacter.id);
+    setName(initialCharacter.name ?? "");
+    setAttribute(initialCharacter.attackAttribute);
+    setPrimaryWeaponSlug(initialCharacter.primaryWeaponSlug);
+    setPrimaryMode(initialCharacter.primaryMode);
+    setSecondaryWeaponSlug(initialCharacter.secondaryWeaponSlug);
+    setSecondaryMode(initialCharacter.secondaryMode);
+    setResults([]);
+    setAllResults([]);
+    setHasRolled(false);
+  }, [initialCharacter]);
 
   useEffect(() => {
     const nextAttribute = ensureValidSelection(attribute, validAttributes);
@@ -91,18 +117,47 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
     setSecondaryMode(safeSecondaryMode);
     setHasRolled(true);
 
-    setResults(
-      rollDescriptions(
-        {
-          attribute: safeAttribute,
-          primaryWeaponSlug,
-          primaryMode: safePrimaryMode,
-          secondaryWeaponSlug: disableSecondary ? undefined : secondaryWeaponSlug,
-          secondaryMode: disableSecondary ? undefined : safeSecondaryMode
-        },
-        data
-      )
-    );
+    const input = {
+      attribute: safeAttribute,
+      primaryWeaponSlug,
+      primaryMode: safePrimaryMode,
+      secondaryWeaponSlug: disableSecondary ? undefined : secondaryWeaponSlug,
+      secondaryMode: disableSecondary ? undefined : safeSecondaryMode
+    };
+
+    setResults(rollDescriptions(input, data));
+    setAllResults(listAllMatchingDescriptions(input, data));
+  };
+
+  const onSave = async () => {
+    if (!name.trim()) return;
+
+    setIsSaving(true);
+    try {
+      const saved = await saveCharacter({
+        id,
+        name: name.trim(),
+        attackAttribute: attribute,
+        primaryWeaponSlug,
+        primaryMode,
+        secondaryWeaponSlug: disableSecondary ? undefined : secondaryWeaponSlug,
+        secondaryMode: disableSecondary ? undefined : secondaryMode
+      });
+      const savedCharacter: Character = {
+        id: saved.id,
+        userId: saved.userId,
+        name: saved.name,
+        attackAttribute: saved.attackAttribute === "STR" || saved.attackAttribute === "DEX" ? saved.attackAttribute : undefined,
+        primaryWeaponSlug: saved.primaryWeaponSlug ?? undefined,
+        primaryMode: saved.primaryMode as WeaponMode | undefined,
+        secondaryWeaponSlug: saved.secondaryWeaponSlug ?? undefined,
+        secondaryMode: saved.secondaryMode as WeaponMode | undefined
+      };
+      setId(savedCharacter.id);
+      onSaveCharacter?.(savedCharacter);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (!data.weapons.length) {
@@ -149,13 +204,18 @@ export function CharacterForm({ data }: { data: LoadedCombatData }) {
       {!disableSecondary ? <WeaponModeSelector value={secondaryMode} validModes={secondaryValidModes} onChange={setSecondaryMode} /> : null}
 
       <div className="flex gap-2">
-        <RollButton onClick={onRoll} />
-        <button type="button" className="rounded border border-zinc-600 px-4 py-2 text-sm">
-          Save Character
+        <RollButton onClick={onRoll} hasRolled={hasRolled} />
+        <button
+          type="button"
+          onClick={onSave}
+          disabled={isSaving || !name.trim()}
+          className="rounded border border-zinc-600 px-4 py-2 text-sm disabled:opacity-50"
+        >
+          {isSaving ? "Saving..." : "Save Character"}
         </button>
       </div>
 
-      <DescriptionResults results={results} hasRolled={hasRolled} />
+      <DescriptionResults results={results} allResults={allResults} hasRolled={hasRolled} />
     </div>
   );
 }

@@ -22,7 +22,15 @@ function MetaChip({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function DescriptionCard({ result }: { result: RollResult }) {
+export function DescriptionCard({
+  result,
+  used = false,
+  onUsedChange
+}: {
+  result: RollResult;
+  used?: boolean;
+  onUsedChange?: (nextValue: boolean) => void;
+}) {
   const { description, resultSource } = result;
   const effectiveProfileIds = result.matchingProfileIds && result.matchingProfileIds.length > 0 ? result.matchingProfileIds : description.profileIds;
   const icon = getCombatIcon({ ...description, profileIds: effectiveProfileIds });
@@ -84,6 +92,16 @@ export function DescriptionCard({ result }: { result: RollResult }) {
         {description.range ? <MetaChip label="Range" value={description.range} /> : null}
         {resultSource ? <MetaChip label="Slot" value={resultSource} /> : null}
       </div>
+
+      <label className="relative z-10 mt-3 inline-flex items-center gap-2 text-xs text-zinc-300">
+        <input
+          type="checkbox"
+          checked={used}
+          onChange={(event) => onUsedChange?.(event.target.checked)}
+          className="h-4 w-4 rounded border-zinc-600 bg-zinc-900 text-accent"
+        />
+        Mark as used
+      </label>
     </article>
   );
 }
