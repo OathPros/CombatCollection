@@ -6,7 +6,7 @@ import type { Character, WeaponMode } from "@/lib/combat/types";
 
 export default async function HomePage() {
   const data = await loadCombatData();
-  const savedCharacters = await listCharacters();
+  const savedCharacters = process.env.DATABASE_URL ? await listCharacters() : [];
   const initialCharacters: Character[] = savedCharacters.map((character) => ({
     id: character.id,
     userId: character.userId,
