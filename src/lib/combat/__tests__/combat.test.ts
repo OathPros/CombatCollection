@@ -96,7 +96,7 @@ const tagProfiles: TagProfile[] = [
 
 const data: LoadedCombatData = {
   weapons: [weapon, secondWeapon],
-  tagProfiles: [tagProfiles[0]],
+  tagProfiles,
   descriptions: [
     baseDescription,
     { ...baseDescription, id: "d2", title: "Specific", isWeaponSpecific: true, weaponSlugs: ["dagger"] },
@@ -106,7 +106,7 @@ const data: LoadedCombatData = {
 
 describe("combat matching", () => {
   it("matches profile overlap", () => {
-    const out = filterByWeaponAndInput(data.descriptions, weapon, "STR", "melee", "dagger");
+    const out = filterByWeaponAndInput(data.descriptions, data.tagProfiles, weapon, "STR", "melee", "dagger");
     expect(out.length).toBe(2);
   });
 
@@ -116,9 +116,26 @@ describe("combat matching", () => {
   });
 
   it("applies weapon-specific description matching", () => {
-    const out = filterByWeaponAndInput(data.descriptions, weapon, "STR", "melee", "dagger");
+    const out = filterByWeaponAndInput(data.descriptions, data.tagProfiles, weapon, "STR", "melee", "dagger");
     expect(out.map((d) => d.id)).toContain("d2");
     expect(out.map((d) => d.id)).not.toContain("d3");
+  });
+
+  it("matches multi-profile descriptions by selected attribute profile", () => {
+    const multiProfileDescription: CombatDescription = {
+      ...baseDescription,
+      id: "d4",
+      attribute: "STR",
+      sourceElements: "STR; Swing \nDEX; Swing",
+      profileIds: ["str-thrust", "dex-thrust"]
+    };
+    const dexWeapon: Weapon = {
+      ...weapon,
+      allowedProfiles: ["dex-thrust"]
+    };
+
+    const out = filterByWeaponAndInput([multiProfileDescription], data.tagProfiles, dexWeapon, "DEX", "melee", "dagger");
+    expect(out.map((d) => d.id)).toEqual(["d4"]);
   });
 
   it("disables secondary with two-handed weapon", () => {
