@@ -5,9 +5,19 @@ import type { RollResult } from "@/lib/combat/types";
 import { getCombatIcon, getCombatIconFallbackSrc } from "@/lib/combat/icons";
 
 function MetaChip({ label, value }: { label: string; value: string }) {
+  const toneClass =
+    label === "Attribute"
+      ? "border-steel/45 bg-steel/10 text-steel"
+      : label === "Motion"
+        ? "border-forest/45 bg-forest/10 text-forest"
+        : label === "Range"
+          ? "border-amethyst/45 bg-amethyst/12 text-amethyst"
+          : "border-brass/45 bg-brass/10 text-brass";
+
   return (
-    <span className="rounded-full border border-zinc-700/90 bg-zinc-900/80 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-300">
-      <span className="text-zinc-500">{label}</span> {value}
+    <span className={`rounded-full border px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] ${toneClass}`}>
+      <span className="text-zinc-400/80">{label}</span>{" "}
+      <span className="text-parchment">{value}</span>
     </span>
   );
 }
@@ -27,7 +37,7 @@ export function DescriptionCard({ result }: { result: RollResult }) {
         src={watermarkSrc}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -right-2 -top-2 h-36 w-36 select-none object-contain opacity-[0.06]"
+        className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 select-none object-contain opacity-[0.06]"
         onError={() => setWatermarkSrc(fallbackIconSrc)}
       />
 
